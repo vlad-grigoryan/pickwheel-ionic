@@ -1,0 +1,7 @@
+{
+  "name": "picwheel-ionic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
