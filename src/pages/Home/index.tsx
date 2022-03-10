@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { StatusBar } from '@capacitor/status-bar';
 import { IonImg, IonLabel } from '@ionic/react';
+import { Capacitor } from '@capacitor/core';
 import ReCropper from '../ReCropper';
 import './style.css';
 
@@ -22,7 +23,6 @@ const Home: React.FC<ContainerProps> = () => {
       saveToGallery: true,
       allowEditing: true,
     });
-    console.log(capturedPhoto,'camcapturedPhoto');
     
     setImageURL(capturedPhoto.webPath!);
   };
@@ -34,10 +34,10 @@ const Home: React.FC<ContainerProps> = () => {
       limit: 1 //does not working for android
     });
     if (capturedPhoto.photos[0]){
-      setImageURL(capturedPhoto.photos[0].webPath);
+      const path = capturedPhoto.photos[0].path? capturedPhoto.photos[0].path : capturedPhoto.photos[0].webPath
+      setImageURL(Capacitor.convertFileSrc(path));
       setImageFormat(capturedPhoto.photos[0].format);
     }
-    console.log(capturedPhoto, '--=-=-=-=--');
   };
 
   useEffect(() => {

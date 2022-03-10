@@ -2,7 +2,7 @@ import Cropper from 'cropperjs';
 import { IonContent, IonPage, IonLabel, IonImg, IonSlides, IonSlide } from '@ionic/react';
 import { useState, useRef, useEffect } from 'react';
 import Home from '../Home/index';
-import { savePicture } from '../../utils/usePhotoGallery';
+import { savePicture, shareing } from '../../utils/usePhotoGallery';
 import { aspectRatio } from '../../utils/cropperData';
 import 'cropperjs/dist/cropper.css';
 import './style.css';
@@ -13,10 +13,9 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
   const imageRef = useRef<any>(null);
   const [imageSRC, setImageSRC] = useState<string>('');
 
-
   useEffect(() => {
-    imageRef.current.src = imgUrl
-    
+    imageRef.current.src = imgUrl;
+
     const cropperjs = imageRef.current && new Cropper(imageRef.current, {
       viewMode: 1,
       modal: true,
@@ -37,7 +36,7 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
       },
       crop: e => {
         console.log(e.detail);
-      }
+      },
     });
     setCropper(cropperjs);
 
@@ -46,10 +45,8 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
     };
   }, [imgUrl, imageRef]);
 
-  const buildURL = async () => {
+  const getCroppedImage = () => {
     const cropped = cropper.getCroppedCanvas({
-      width: 160,
-      height: 90,
       minWidth: 256,
       minHeight: 256,
       maxWidth: 4096,
@@ -57,17 +54,28 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
       fillColor: '#fff',
       imageSmoothingEnabled: false,
       imageSmoothingQuality: 'high',
-    }).toDataURL(`image/${imgFormat}`, 0.9);
-    cropper.destroy();
+    }).toDataURL({
+      format: `image/${imgFormat}`,
+      quality: 1.0,
+    });
 
     setImageSRC(cropped);
-    const filename = new Date().getTime() + `.${imgFormat}`;
-    await savePicture({
-      webPath: cropped,
-      format: `${imgFormat}`,
+    let name = new Date().getTime() + `.${imgFormat}`;
+    return { cropped, name }
+  };
+
+  const saveImageToGallery = () => {
+    const data = getCroppedImage();
+    savePicture({
+      path: data.cropped,
+      format: imgFormat,
       saved: false,
-    }, filename);
-    
+    }, data.name);
+  };
+
+  const shareImage = () => {
+    const data = getCroppedImage();
+    shareing(data.cropped, data.name);
   };
 
   const slideOptions = {
@@ -100,13 +108,13 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
                 />
               </div>
               <div className='saveAndShareContainer'>
-                <div className='saveAndShare' onClick={buildURL}>
+                <div className='saveAndShare' onClick={saveImageToGallery}>
                   <IonImg
                     className='icon'
                     src={require('../../assets/icons/download.png')}
                   />
                 </div>
-                <div className='saveAndShare' onClick={() => { }}>
+                <div className='saveAndShare' onClick={shareImage}>
                   <IonImg
                     className='icon'
                     src={require('../../assets/icons/share.png')}
@@ -132,8 +140,8 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
 
           <div className='reCropperParent'>
             <div className='reCropper' >
-              { 
-                (!imageSRC)? <img ref={imageRef} alt='Cropping' /> : <img src={imageSRC} alt='Cropped' />
+              {
+                (!imageSRC) ? <img ref={imageRef} alt='Cropping' /> : <img src={imageSRC} alt='Cropped' />
               }
             </div>
           </div>
