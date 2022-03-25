@@ -1,0 +1,24 @@
+.slider {
+  display: flex;
+  z-index: 1;
+  color: white;
+  flex-direction: column;
+}
+
+.slider .setAspectRatio{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  height: 15vh;
+}
+.slider .icon {
+  width: 10vw;
+  height: 10vh;
+  z-index: 3;
+}
+.slider .buttonTitle {
+  font-size: 12px;
+  box-sizing: border-box;
+}
+

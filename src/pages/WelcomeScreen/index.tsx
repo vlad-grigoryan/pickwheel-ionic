@@ -17,20 +17,20 @@ const WelcomeScreen: React.FC = () => {
       <div className='welcomeContainer'>
         <div className={`smallOne ${animation && 'scaling'}`}>
           <div className={`smallWheel ${animation && 'rotateWheel'}`}>
-            <IonImg className='wheelImg' src={require('../../assets/wheel_1.png')} />
+            <IonImg className='wheelImg' src={require('../../assets/animation/wheel_1.png')} />
           </div>
-          <IonImg className='smallLens' src={require('../../assets/lens_1.png')} />
+          <IonImg className='smallLens' src={require('../../assets/animation/lens_1.png')} />
         </div>
 
         <div className={`appName ${animation && 'animatedAppName'}`}>
-          <IonImg className='wheelImg' src={require('../../assets/Picwheel.png')} />
+          <IonImg className='wheelImg' src={require('../../assets/animation/Picwheel.png')} />
         </div>
 
         <div className={`bigOne ${animation && 'scaling'}`}>
           <div className={`bigWheel ${animation && 'rotateWheel'}`}>
-            <IonImg className='wheelImg' src={require('../../assets/wheel_2.png')} />
+            <IonImg className='wheelImg' src={require('../../assets/animation/wheel_2.png')} />
           </div>
-          <IonImg className='bigLens' src={require('../../assets/lens_2.png')} />
+          <IonImg className='bigLens' src={require('../../assets/animation/lens_2.png')} />
         </div>
 
         <div className='contentOpacity' />

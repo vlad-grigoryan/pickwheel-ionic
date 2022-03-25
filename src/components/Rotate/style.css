@@ -1,0 +1,57 @@
+.rotate {
+  box-sizing: border-box;
+  height: 15vh;
+}
+
+.rangeSlider {
+  display: flex;
+  z-index: 1;
+  color: white;
+  flex-direction: column;
+}
+.rangeSlider .setRange {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  height: 8vh;
+}
+.setRange .shortLine {
+  width: 8vw;
+  height: 6vh;
+  z-index: 3;
+}
+
+.setRange .longLine {
+  width: 6vw;
+  height: 7vh;
+  z-index: 3;
+}
+
+.setRange .centralLine {
+  width: 3vw;
+  height: 5vh;
+  z-index: 3;
+}
+.activeLine {
+  position: absolute;
+  left: 49%; /* 192.5px */
+  bottom: 13.5%; /* 113px */
+  z-index: 1;
+}
+
+.activeLine .activeIcon {
+  width: 2vw;
+  height: 5vh;
+  z-index: 3;
+}
+
+.rangeButtons {
+  display: flex;
+  justify-content: space-around;
+}
+.rangeButtons .icon {
+  width: 5vh;
+  height: 5vh;
+  z-index: 3;
+}

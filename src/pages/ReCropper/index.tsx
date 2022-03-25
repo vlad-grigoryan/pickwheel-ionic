@@ -1,17 +1,19 @@
 import Cropper from 'cropperjs';
-import { IonContent, IonPage, IonLabel, IonImg, IonSlides, IonSlide } from '@ionic/react';
+import { IonContent, IonPage, IonImg } from '@ionic/react';
 import { useState, useRef, useEffect } from 'react';
 import Home from '../Home/index';
+import { SpinnedPopoverLoading, AspectRatioSlider, Rotate, Mirror} from '../../components';
 import { savePicture, shareing } from '../../utils/usePhotoGallery';
-import { aspectRatio } from '../../utils/cropperData';
 import 'cropperjs/dist/cropper.css';
 import './style.css';
 
 const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string }) => {
   const [homePage, setHomePage] = useState<boolean>(false);
   const [cropper, setCropper] = useState<any>(null);
-  const imageRef = useRef<any>(null);
   const [imageSRC, setImageSRC] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [instrument, setInstrument] = useState<string>('Scissors');
+  const imageRef = useRef<any>(null);
 
   useEffect(() => {
     imageRef.current.src = imgUrl;
@@ -24,18 +26,19 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
       center: true,
       background: false,
       autoCrop: true,
-      movable: false,
-      zoomable: false,
+      movable: true,
+      zoomable: true,
       autoCropArea: 1,
       responsive: true,
       cropBoxMovable: true,
       cropBoxResizable: true,
-      scalable: false,
+      scalable: true,
       ready: () => {
+        setLoading(false);
         console.log('cropper ready');
       },
       crop: e => {
-        console.log(e.detail);
+        console.log(e.detail.rotate, 'rotate');
       },
     });
     setCropper(cropperjs);
@@ -65,31 +68,24 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
   };
 
   const saveImageToGallery = () => {
+    setLoading(true);
+
     const data = getCroppedImage();
     savePicture({
       path: data.cropped,
       format: imgFormat,
       saved: false,
     }, data.name);
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
   };
 
   const shareImage = () => {
     const data = getCroppedImage();
     shareing(data.cropped, data.name);
   };
-
-  const slideOptions = {
-    initialSlide: 0,
-    speed: 400,
-    slidesPerView: 5,
-    coverflowEffect: {
-      rotate: 50,
-      stretch: 0,
-      depth: 100,
-      modifier: 1,
-      slideShadows: true,
-    },
-  }
 
   if (homePage) {
     return <Home />
@@ -99,6 +95,7 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
     <IonPage>
       <IonContent>
         <div className='cropperContainer'>
+          <SpinnedPopoverLoading loading={loading} />
           <div className='top'>
             <div className='ionHeaderNavigation'>
               <div className='ionBack' onClick={() => setHomePage(true)}>
@@ -122,7 +119,7 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
                 </div>
               </div>
             </div>
-            <div className='undoRedoNavigation'>
+            {/* <div className='undoRedoNavigation'>
               <div className='undoRedo' onClick={() => { }}>
                 <IonImg
                   className='undoRedoicon'
@@ -135,7 +132,7 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
                   src={require('../../assets/icons/redoActive.png')}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className='reCropperParent'>
@@ -147,30 +144,16 @@ const ReCropper = ({ imgUrl, imgFormat }: { imgUrl: string; imgFormat: string })
           </div>
 
           <div className='bottom'>
-            <div className='doneButton' onClick={() => console.log('done')}>
+            {/* <div className='doneButton' onClick={() => console.log('done')}>
               <IonLabel className='buttonTitle'>Done</IonLabel>
-            </div>
-            <div className='aspectRatioContainer'>
-              <IonSlides options={slideOptions}>
-                {
-                  aspectRatio.map(item => {
-                    return (
-                      <IonSlide key={item.pic} className='setAspectRation' onClick={() => cropper.setAspectRatio(item.ration)}>
-                        <IonImg
-                          className='icon'
-                          src={item.pic}
-                        />
-                        <IonLabel className='buttonTitle'>{item.label}</IonLabel>
-                      </IonSlide>
-                    )
-                  })
-                }
-              </IonSlides>
-            </div>
+            </div> */}
+            {instrument === 'Scissors' && <AspectRatioSlider cropper={cropper} />}
+            {instrument === 'Rotate' && <Rotate cropper={cropper} />}
+            {instrument === 'Mirror' && <Mirror cropper={cropper} />}
             <div className='instrumentsSection'>
-              <div className='instrument'>Crop</div>
-              <div className='instrument'>Rotate</div>
-              <div className='instrument'>Mirror</div>
+              <div className='instrument' onClick={() => setInstrument('Scissors')}>Crop</div>
+              <div className='instrument' onClick={() => setInstrument('Rotate')}>Rotate</div>
+              <div className='instrument' onClick={() => setInstrument('Mirror')}>Mirror</div>
             </div>
           </div>
 
