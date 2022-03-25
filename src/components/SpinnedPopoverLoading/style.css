@@ -1,0 +1,15 @@
+.popover{
+  color: white;
+  --background: transparent !important;
+  --box-shadow: none !important;
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.23) !important;
+}
+#ion-react-wrapper {
+  align-items: center;
+  justify-content: center;
+}
+
+.popover .spinner {
+  width: 10vw;
+  height: 10vh;
+}
