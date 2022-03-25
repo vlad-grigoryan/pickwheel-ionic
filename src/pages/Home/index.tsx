@@ -16,35 +16,41 @@ const Home: React.FC<ContainerProps> = () => {
   const [imageFormat, setImageFormat] = useState<string>('');
 
   const openCamera = async () => {
-    const capturedPhoto = await Camera.getPhoto({
+    await Camera.getPhoto({
       resultType: CameraResultType.Uri,
       source: CameraSource.Camera,
       quality: 100,
-      saveToGallery: true,
-      allowEditing: true,
-    });
-    
-    setImageURL(capturedPhoto.webPath!);
+      saveToGallery: false,
+    })
+      .then(item => {
+        const path = item.dataUrl ? item.dataUrl : item.webPath;
+        setImageURL(Capacitor.convertFileSrc(path!));
+        setImageFormat(item.format);
+      })
+      .catch((error) => console.log('Error sharing ::: ', error))
   };
 
   const choosePhoto = async () => {
-    const capturedPhoto = await Camera.pickImages({
+    await Camera.pickImages({
       quality: 100,
       // presentationStyle: 'popover', //does not working for android
       limit: 1 //does not working for android
-    });
-    if (capturedPhoto.photos[0]){
-      const path = capturedPhoto.photos[0].path? capturedPhoto.photos[0].path : capturedPhoto.photos[0].webPath
-      setImageURL(Capacitor.convertFileSrc(path));
-      setImageFormat(capturedPhoto.photos[0].format);
-    }
+    })
+      .then(item => {
+        if (item.photos[0]) {
+          const path = item.photos[0].path ? item.photos[0].path : item.photos[0].webPath
+          setImageURL(Capacitor.convertFileSrc(path));
+          setImageFormat(item.photos[0].format);
+        }
+      })
+      .catch((error) => console.log('Error sharing ::: ', error))
   };
 
   useEffect(() => {
     setAnimation(true);
   }, []);
 
-  if (imageURL) {    
+  if (imageURL) {
     return <ReCropper imgUrl={imageURL} imgFormat={imageFormat} />
   }
 
@@ -54,29 +60,29 @@ const Home: React.FC<ContainerProps> = () => {
         <div className='mainContainer'>
           <IonImg
             className='title'
-            src={require('../../assets/Picwheel.png')}
+            src={require('../../assets/animation/Picwheel.png')}
           />
           <div className='buttonsConatiner'>
             <div className={`buttonContent button1 ${animation && 'buttonDone'}`} onClick={choosePhoto}>
               <IonLabel className='buttonTitle'>Photo</IonLabel>
               <IonImg
                 className='icons'
-                src={require('../../assets/icons/photo.png')}
+                src={require('../../assets/animation/photo.png')}
               />
             </div>
             <div className={`buttonContent button2 ${animation && 'buttonDone'}`} onClick={openCamera}>
               <IonLabel className='buttonTitle'>Camera</IonLabel>
               <IonImg
                 className='icons'
-                src={require('../../assets/icons/camera.png')}
+                src={require('../../assets/animation/camera.png')}
               />
             </div>
 
-            <div className={`buttonContent button3 ${animation && 'buttonDone'}`} onClick={() => { }}>
+            {/* <div className={`buttonContent button3 ${animation && 'buttonDone'}`} onClick={() => { }}>
               <IonLabel className='buttonTitle'>Collage</IonLabel>
               <IonImg
                 className='icons'
-                src={require('../../assets/icons/collage.png')}
+                src={require('../../assets/animation/collage.png')}
               />
             </div>
 
@@ -84,17 +90,17 @@ const Home: React.FC<ContainerProps> = () => {
               <IonLabel className='buttonTitle'>AR Camera</IonLabel>
               <IonImg
                 className='icons'
-                src={require('../../assets/icons/arcam.png')}
+                src={require('../../assets/animation/arcam.png')}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className={`wheelCircuit1 ${animation && 'animatedWheel'}`}>
-            <IonImg className='wheelImg' src={require('../../assets/wheelCircuit1.png')} />
+            <IonImg className='wheelImg' src={require('../../assets/animation/wheelCircuit1.png')} />
           </div>
 
           <div className={`wheelCircuit2 ${animation && 'animatedWheel'}`}>
-            <IonImg className='wheelImg' src={require('../../assets/wheelCircuit2.png')} />
+            <IonImg className='wheelImg' src={require('../../assets/animation/wheelCircuit2.png')} />
           </div>
 
           <div className='contentOpacity' />

@@ -30,11 +30,7 @@ const App: React.FC = () => {
     setTimeout(() => setAnimation(false), 4000);
   },[]);
 
-  return (
-    <IonApp>
-      {animation ? <WelcomeScreen /> : <Home />}
-    </IonApp>
-  )
+  return ( animation ? <WelcomeScreen /> : <Home /> )
 };
 
 export default App;

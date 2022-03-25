@@ -14,8 +14,6 @@ export async function savePicture(photo: Photo, filename: string): Promise<any> 
     directory: Directory.Documents,
   });
   
-  alert('image saved');
-
   if (isPlatform('hybrid')) {
     // Display the new image by rewriting the 'file://' path to HTTP
     // Details: https://ionicframework.com/docs/building/webview#file-protocol
