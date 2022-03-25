@@ -1,0 +1,14 @@
+.mirror {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  box-sizing: border-box;
+  height: 12vh;
+  z-index: 3;
+}
+
+.mirror .icon {
+  width: 5vh;
+  height: 5vh;
+  z-index: 3;
+}

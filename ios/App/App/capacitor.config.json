@@ -2,8 +2,5 @@
 	"appId": "io.ionic.starter",
 	"appName": "picwheel-ionic",
 	"webDir": "build",
-	"bundledWebRuntime": false,
-	"server": {
-		"url": "http://192.168.10.208:8100"
-	}
+	"bundledWebRuntime": false
 }
